@@ -4,6 +4,7 @@ sells.csv
 deposits.csv
 other.csv
 dividend.csv
+splits.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

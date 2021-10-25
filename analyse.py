@@ -6,12 +6,11 @@ df_deposits = pd.read_csv('deposits.csv')
 df_other = pd.read_csv('other.csv')
 df_dividend = pd.read_csv('dividend.csv')
 
-# Ticker summary
-# date of first buy, total bought, total sold, current amount holding, 
 
 # Portfolio summary
-# One row per ticker
-# Name, shares, money in, money out, net spend
+totalSpent = df_buys.groupby('Name').agg({'Value': 'sum'})
+sharesIn = df_buys.groupby('Name').agg({'ShareCount': 'sum'})['ShareCount']
+sharesOut = df_sells.groupby('Name').agg({'ShareCount': 'sum'})['ShareCount']
+netShares = (sharesIn - sharesOut).round(5)
 
-# day/week/month summary
-# ticker, net shares, net £
+# TODO if date earlier than split, multiply shares bought by split
