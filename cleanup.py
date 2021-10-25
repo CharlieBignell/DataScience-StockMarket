@@ -1,5 +1,4 @@
 import pandas as pd
-import re
 
 # transactions_raw columns:
 # Value Date: date of transaction
