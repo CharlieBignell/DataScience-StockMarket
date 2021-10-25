@@ -39,8 +39,6 @@ def format(df):
     df[["ShareCount", "Value", "FXRate"]] = df[[
         "ShareCount", "Value", "FXRate"]].apply(pd.to_numeric)
 
-    df = df.reset_index(drop=True)
-
 
 # Get all buys in a single dataframe, and format
 df_buys = df_tran.loc[df_tran["Type"] == "BUY", ["Date", "Type", "Details", "Value"]]
@@ -55,12 +53,13 @@ format(df_sells)
 
 # Get all deposits in a single dataframe
 df_deposit = df_tran.loc[df_tran["Type"] == "DEPOSIT", ["Date", "Value"]]
-df_deposit = df_deposit.reset_index(drop=True)
 
 # Get all dividends in a single dataframe
 df_dividend = df_tran.loc[df_tran["Type"] == "INVESTMENT_INCOME", ["Date", "Details", "Value"]]
 df_dividend["ISIN"] = df_dividend["Details"].str.extract(r'([A-Z]{2}[A-Z0-9]{9}[0-9]{1})')
-# df_dividend["Name"] = df_dividend["Details"].str.extract(r'(.+(?= \([A-Z]{2}[A-Z0-9]{9}[0-9]{1}))')
+df_dividend["Name"] = df_dividend["Details"].str.extract(r'(m .+(?= \([A-Z]{2}[A-Z0-9]{9}[0-9]{1}))')
+df_dividend["Name"] = df_dividend["Name"].apply(removeShareCount)
+df_dividend.drop(columns=["Details"], inplace=True)
 
 # Put the remaning activity in a separate dataframe. The value of each transaction here tends to be very small
 df_interest = df_tran.loc[df_tran["Type"] == "INTEREST", ["Date", "Value"]]
