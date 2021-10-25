@@ -1,4 +1,8 @@
 transactions_raw.csv
+buys.csv
+sells.csv
+deposits.csv
+others.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
