@@ -5,6 +5,13 @@ import numpy as np
 df_basic = pd.read_csv('./cleaned/basic.csv')
 df_other = pd.read_csv('./cleaned/other.csv')
 df_dividend = pd.read_csv('./cleaned/dividend.csv')
+df_basic['Date'] = pd.to_datetime(df_basic['Date'])
+df_other['Date'] = pd.to_datetime(df_other['Date'])
+df_dividend['Date'] = pd.to_datetime(df_dividend['Date'])
+
+#################
+# Daily Summary #
+#################
 
 # Generate a daily summary table from the 'other' dataframe
 df_dailySummary = pd.pivot_table(
@@ -38,15 +45,28 @@ df_dailySummary = pd.concat([df_dailySummary, df_basicPivot, df_diviPivot], axis
 df_dailySummary = df_dailySummary.rename(columns={"BUY": "Total Bought", "SELL": "Total Sold"})
 df_dailySummary = df_dailySummary
 df_dailySummary['Net Income']= df_dailySummary.sum(axis=1)
-print(df_dailySummary)
+
+###########################
+# Net Shares on Given Day #
+###########################
+
+date = pd.to_datetime("2021-10-26")
+
+# Get the buys and sells for each day before the given date
+df_buysInRange = df_basic.loc[(df_basic["Type"] == "BUY") & (df_basic["Date"] < date), ["Date", "Name", "ShareCount"]]
+df_sellsInRange = df_basic.loc[(df_basic["Type"] == "SELL") & (df_basic["Date"] < date), ["Date", "Name", "ShareCount"]]
+
+# Any missing sells, i.e. any stock we've bought but not sold any of, need to still be in the resulting 'sell' df
+df_emptySells = df_buysInRange.copy()
+df_emptySells["ShareCount"] = 0
+df_sellsInRange = pd.concat([df_sellsInRange, df_emptySells])
+
+# Aggregate to get total shares in and out
+sharesIn = df_buysInRange.groupby('Name').agg({'ShareCount': 'sum'})['ShareCount']
+sharesOut = df_sellsInRange.groupby('Name').agg({'ShareCount': 'sum'})['ShareCount']
 
 # Calculate net shares
-myDate = "14/08/2020"
-df_buys = df_basic.loc[df_basic["Type"] == "BUY", ["Name", "ShareCount"]]
-df_sells = df_basic.loc[df_basic["Type"] == "SELL", ["Name", "ShareCount"]]
-sharesIn = df_buys.groupby('Name').agg({'ShareCount': 'sum'})['ShareCount']
-sharesOut = df_sells.groupby('Name').agg({'ShareCount': 'sum'})['ShareCount']
-netShares = (sharesIn - sharesOut).round(5)
-# print(netShares)
+netShares = (sharesIn - sharesOut).round(5).to_frame(name="ShareCount")
+netShares = netShares.loc[netShares["ShareCount"] != 0]
 
 df_dailySummary.to_csv('./outputs/daily.csv', index=True)
