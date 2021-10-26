@@ -1,8 +1,7 @@
 transactions_raw.csv
-buys.csv
-sells.csv
+basic.csv
 deposits.csv
-daily.csv
+other.csv
 dividend.csv
 splits.csv
 
