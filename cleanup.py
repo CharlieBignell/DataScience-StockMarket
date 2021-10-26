@@ -8,12 +8,12 @@ import numpy as np
 # Value: the amount bought/sold/given in GBP. It's signed i.e. outgoings are negative
 
 # Read data and format the date column
-df_tran = pd.read_csv('transactions_raw.csv')
+df_tran = pd.read_csv('./inputs/transactions_raw.csv')
 df_tran.rename(columns={'Value Date': 'Date'}, inplace=True)
 df_tran['Date'] = pd.to_datetime(df_tran['Date'], format="%d/%m/%Y")
 
 # Read the data on stock splits and format the date column
-df_splits = pd.read_csv('splits.csv')
+df_splits = pd.read_csv('./inputs/splits.csv')
 df_splits['Date'] = pd.to_datetime(df_splits['Date'], format="%d/%m/%Y")
 
 #########
@@ -50,10 +50,6 @@ df_basic[["ShareCount", "Value", "FXRate"]] = df_basic[["ShareCount", "Value", "
 for index, row in df_splits.iterrows():
     df_basic.loc[(df_basic["Name"] == row["Name"]) & (df_basic["Date"] < row["Date"]), ["ShareCount"]] = (df_basic['ShareCount'] * row["Split"]).round(6)
 
-
-# Convert buy values to positive
-df_basic.loc[df_basic["Type"] == "BUY", "Value"] = df_basic["Value"]*-1
-
 #############
 # Dividends #
 #############
@@ -84,6 +80,6 @@ df_other = pd.concat([df_stamp, df_interest, df_fx, df_deposit])
 df_other = df_other.reset_index(drop=True)
 
 # Output dataframes to CSV
-df_basic.to_csv('basic.csv', index=False)
-df_dividend.to_csv('dividend.csv', index=False)
-df_other.to_csv('other.csv', index=True)
+df_basic.to_csv('./cleaned/basic.csv', index=False)
+df_dividend.to_csv('./cleaned/dividend.csv', index=False)
+df_other.to_csv('./cleaned/other.csv', index=True)

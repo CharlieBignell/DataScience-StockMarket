@@ -1,9 +1,5 @@
-transactions_raw.csv
-basic.csv
-deposits.csv
-other.csv
-dividend.csv
-splits.csv
+*.csv
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
