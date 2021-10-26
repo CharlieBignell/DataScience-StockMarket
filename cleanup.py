@@ -1,5 +1,5 @@
 import pandas as pd
-from pandas.io import formats
+import numpy as np
 
 # transactions_raw columns:
 # Value Date: date of transaction
@@ -60,9 +60,6 @@ df_buys["Value"] = df_buys["Value"]*-1
 df_sells = df_tran.loc[df_tran["Type"] == "SELL", ["Date", "Type", "Details", "Value"]]
 format(df_sells)
 
-# Get all deposits in a single dataframe
-df_deposit = df_tran.loc[df_tran["Type"] == "DEPOSIT", ["Date", "Value"]]
-
 # Get all dividends in a single dataframe
 df_dividend = df_tran.loc[df_tran["Type"] == "INVESTMENT_INCOME", ["Date", "Details", "Value"]]
 df_dividend["ISIN"] = df_dividend["Details"].str.extract(r'([A-Z]{2}[A-Z0-9]{9}[0-9]{1})')
@@ -72,23 +69,23 @@ df_dividend.drop(columns=["Details"], inplace=True)
 
 # Put the remaning activity in a separate dataframe. The value of each transaction here tends to be very small
 df_interest = df_tran.loc[df_tran["Type"] == "INTEREST", ["Date", "Value"]]
-df_fx = df_tran.loc[df_tran["Type"] == "FX_FEE", ["Date", "Type", "Value"]]
-df_stamp = df_tran.loc[df_tran["Type"] == "STAMP_DUTY", ["Date", "Type", "Value"]]
+df_fx = df_tran.loc[df_tran["Type"] == "FX_FEE", ["Date", "Value"]]
+df_stamp = df_tran.loc[df_tran["Type"] == "STAMP_DUTY", ["Date", "Value"]]
+df_deposit = df_tran.loc[df_tran["Type"] == "DEPOSIT", ["Date", "Value"]]
 
 df_stamp["Type"] = "Stamp Duty"
 df_interest["Type"] = "Interest"
 df_fx["Type"] = "FX Fee"
+df_deposit["Type"] = "Deposit"
 
-df_other = pd.concat([df_stamp, df_interest, df_fx])
-df_other = df_other.reset_index(drop=True)
+df_dailySummary = pd.concat([df_stamp, df_interest, df_fx, df_deposit])
+df_dailySummary = df_dailySummary.reset_index(drop=True)
+df_dailySummary = pd.pivot_table(df_dailySummary, values="Value", index="Date", columns="Type", aggfunc=np.sum).fillna(0)
+df_dailySummary[["FX Fee", "Deposit", "Interest", "Stamp Duty"]] = df_dailySummary[["FX Fee", "Deposit", "Interest", "Stamp Duty"]].round(2)
+
+# Add buys, sells, and cash value to daily
 
 df_buys.to_csv('buys.csv', index=False)
 df_sells.to_csv('sells.csv', index=False)
-df_deposit.to_csv('deposits.csv', index=False)
 df_dividend.to_csv('dividend.csv', index=False)
-df_other.to_csv('other.csv', index=False)
-
-# Make sure all rows have been included in the new dataframes
-errorFlag = len(df_tran.index) - len(df_deposit.index) - len(df_buys.index) - len(df_sells.index) - len(df_dividend.index) - len(df_other.index)
-if errorFlag != 0:
-    print("ERROR: " + str(errorFlag) + " row(s) missing in new dataframes")
+df_dailySummary.to_csv('daily.csv', index=True)
