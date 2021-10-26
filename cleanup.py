@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas.io import formats
 
 # transactions_raw columns:
 # Value Date: date of transaction
@@ -9,6 +10,10 @@ import pandas as pd
 # Read data and rename date column
 df_tran = pd.read_csv('transactions_raw.csv')
 df_tran.rename(columns={'Value Date': 'Date'}, inplace=True)
+df_tran['Date'] = pd.to_datetime(df_tran['Date'], format="%d/%m/%Y")
+
+df_splits = pd.read_csv('splits.csv')
+df_splits['Date'] = pd.to_datetime(df_splits['Date'], format="%d/%m/%Y")
 
 
 def removeShareCount(string):
@@ -42,6 +47,11 @@ def format(df):
 # Get all buys in a single dataframe, and format
 df_buys = df_tran.loc[df_tran["Type"] == "BUY", ["Date", "Type", "Details", "Value"]]
 format(df_buys)
+
+# Alter share count of certain stocks to account for stock splits
+for index, row in df_splits.iterrows():
+    df_buys.loc[(df_buys["Name"] == row["Name"]) & (df_buys["Date"] < row["Date"]), ["ShareCount"]] = (df_buys['ShareCount'] * row["Split"]).round(6)
+
 
 # Convert the value to positive i.e. amount spent, rather than net balance, as this is more intuitive now that we've separated buying and selling
 df_buys["Value"] = df_buys["Value"]*-1

@@ -11,6 +11,7 @@ df_dividend = pd.read_csv('dividend.csv')
 totalSpent = df_buys.groupby('Name').agg({'Value': 'sum'})
 sharesIn = df_buys.groupby('Name').agg({'ShareCount': 'sum'})['ShareCount']
 sharesOut = df_sells.groupby('Name').agg({'ShareCount': 'sum'})['ShareCount']
-netShares = (sharesIn - sharesOut).round(5)
+netShares = (sharesIn - sharesOut).round(2)
 
-# TODO if date earlier than split, multiply shares bought by split
+print(netShares)
+
