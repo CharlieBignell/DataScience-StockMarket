@@ -12,10 +12,6 @@ df_tran = pd.read_csv('./inputs/transactions_raw.csv')
 df_tran.rename(columns={'Value Date': 'Date'}, inplace=True)
 df_tran['Date'] = pd.to_datetime(df_tran['Date'], format="%d/%m/%Y")
 
-# Read the data on stock splits and format the date column
-df_splits = pd.read_csv('./inputs/splits.csv')
-df_splits['Date'] = pd.to_datetime(df_splits['Date'], format="%d/%m/%Y")
-
 #########
 # BASIC #
 #########
@@ -45,10 +41,6 @@ df_basic.drop(columns=["Details"], inplace=True)
 
 # Convert numeric columns
 df_basic[["ShareCount", "Value", "FXRate"]] = df_basic[["ShareCount", "Value", "FXRate"]].apply(pd.to_numeric)
-
-# Alter share count of certain stocks to account for stock splits
-for index, row in df_splits.iterrows():
-    df_basic.loc[(df_basic["Name"] == row["Name"]) & (df_basic["Date"] < row["Date"]), ["ShareCount"]] = (df_basic['ShareCount'] * row["Split"]).round(6)
 
 #############
 # Dividends #
