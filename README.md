@@ -17,7 +17,7 @@ Although it contains all the data I need, most of the uesful data is packed into
 This file won't be of much use to anyone who isn't trying to clean up transactional data specifically from Freetrade.
 
 ## Analyse
-This file reads data in the format exported from *cleanup* above. It plots a basic graph of portfolio value over time (along with rolling averages), and outputs basic stats to the console.
+This file reads data in the format exported from *cleanup* above. It plots a basic graph of portfolio value over time (along with rolling averages), and outputs basic stats to the console. It also outputs various summary tables as csv files.
 
 ## Synthesise
 This file creates synthetic trading data in the format exported from *cleanup* above. It takes a number of inputs:
