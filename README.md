@@ -21,13 +21,13 @@ This file reads data in the format exported from *cleanup* above. It plots a bas
 
 # Synthesise
 This file creates synthetic trading data in the format exported from *cleanup* above. It takes a number of inputs:
-- **Start date and end date**: the date range to synthesise transactions over
-- **Deposit amount**: the total amount of money to trade with 
-- **Deposit no.**: the amount of deposits to spread 'deposit amount' over
-- **FX Rate**: rather than using the relevant fx rate at the time of transactions, a basic fx rate (USD-GBP) is defined and applied to all transactions
-- **Buy no.**: The number of 'buy' transactions
+- **Start date and end date**: the date range to synthesise transactions over.
+- **Deposit amount**: the total amount of money to trade with .
+- **Deposit no.**: the amount of deposits to spread 'deposit amount' over.
+- **FX Rate**: rather than using the relevant fx rate at the time of transactions, a basic fx rate (USD-GBP) is hard-coded and applied to all transactions.
+- **Buy no.**: The number of 'buy' transactions to simulate.
 - **Min and max spend**: the minimum and maximum percentage (between 0-1) of the current cash balance to spend when generating a buy. Higher max = spend more per buy = more sells (see below). Wider range = more 'noisy' buy values.
-- **Max spend**: the minmum and maximum percentage (between 0-1) of the current portfolio to sell at any given sell transaction. Sells are currently used to add cash when a 'buy' is not possible due to lack of funds. Therefore the higher this number, the fewer (but larger) sells there will be
-- **Tickers**: the companies to buy/sell
+- **Max spend**: the minmum and maximum percentage (between 0-1) of the current portfolio to sell at any given sell transaction. Sells are currently used to add cash when a 'buy' is not possible due to lack of funds. Therefore the higher this number, the fewer (but larger) sells there will be.
+- **Tickers**: the companies to buy/sell.
 
 All of the above have defaults set. For tickers, I chose 2 companies each from the sectors technology, food, energy, finance, health, along with 2 ETFs.
