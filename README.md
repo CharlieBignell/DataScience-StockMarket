@@ -9,7 +9,7 @@ The broker I use is called Freetrade. They provide transactional data in the for
 - **Details**: text explanation of transaction e.g. '1.5 Tesla Motors Inc (US88160R1014) @ USD 615.10000 (@ 1 USD = 1.38887 GBP) on 04-Mar-2021 20:30:26'
 - **Value**: the amount bought/sold/given in GBP. It's signed i.e. outgoings are negative
 
-Although it contains all the data I need, most of the uesful data is packed into the string contained in the 'details' column. Cleanup.ipynb serves to extract all the useful information from this csv file and export it into three files:
+Although it contains all the data I need, most of the uesful data is packed into the string contained in the 'details' column. Cleanup.ipynb serves to extract all the useful information from this CSV file and export it into three files:
 - **basic.csv**: all buys/sells with the columns Date, Type, Value, ShareCount, FXRate, Name, and Currency
 - **dividend.csv**: all dividend payments with the columns Date, Value, and Name
 - **other.csv**: all other transactions e.g. interest, fx fee, deposits etc. with the columns Date, Value, and Type
@@ -17,7 +17,7 @@ Although it contains all the data I need, most of the uesful data is packed into
 This file won't be of much use to anyone who isn't trying to clean up transactional data specifically from Freetrade.
 
 ## Analyse
-This file reads data in the format exported from *cleanup* above. It plots a basic graph of portfolio value over time (along with rolling averages), and outputs basic stats to the console. It also outputs various summary tables as csv files.
+This file reads data in the format exported from *cleanup* above. It plots a basic graph of portfolio value over time (along with rolling averages), and outputs basic stats to the console. It also outputs various summary tables as CSV files.
 
 ## Synthesise
 This file creates synthetic trading data in the format exported from *cleanup* above. It takes a number of inputs:
