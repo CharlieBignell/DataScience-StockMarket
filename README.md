@@ -19,7 +19,7 @@ This file won't be of much use to anyone who isn't trying to clean up transactio
 ## Analyse
 This file reads data in the format exported from *cleanup* above. It plots a basic graph of portfolio value over time (along with rolling averages), and outputs basic stats to the console.
 
-# Synthesise
+## Synthesise
 This file creates synthetic trading data in the format exported from *cleanup* above. It takes a number of inputs:
 - **Start date and end date**: the date range to synthesise transactions over.
 - **Deposit amount**: the total amount of money to trade with.
